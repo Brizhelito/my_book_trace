@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:intl/intl.dart';
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
+import 'package:intl/intl.dart';  
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
 
 class CreateChallengeDialog extends StatefulWidget {
   final DateTime initialStartDate;

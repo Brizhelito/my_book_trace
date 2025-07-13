@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/widgets/home_content.dart';
+import 'package:MyBookTrace/widgets/home_content.dart';
 
 /// Pantalla de inicio con AppBar independiente
 class HomeScreen extends StatelessWidget {

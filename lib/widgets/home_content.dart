@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
-import 'package:my_book_trace/widgets/challenges/challenge_card.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/widgets/challenges/challenge_card.dart';
 
 /// Widget que muestra el contenido principal de la pantalla de inicio
 /// Separado para poder integrarlo directamente en el router
@@ -190,7 +190,13 @@ class _HomeContentState extends State<HomeContent> {
                       : null,
                 ),
                 child: book.coverImageUrl == null
-                    ? const Icon(Icons.book, size: 40, color: Colors.grey)
+                    ? Center(
+                        child: Icon(
+                          Icons.book,
+                          size: 40,
+                          color: Colors.grey[600],
+                        ),
+                      )
                     : null,
               ),
             ),

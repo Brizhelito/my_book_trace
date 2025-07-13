@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/models/reading_session.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:intl/intl.dart';
 
@@ -255,7 +255,7 @@ class ReadingHabitsCard extends StatelessWidget {
         : 'N/A';
     
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         const Text(
           'Ritmo de Lectura',
@@ -265,14 +265,26 @@ class ReadingHabitsCard extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 12),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
+        Column(
           children: [
-            _buildStatColumn('Páginas/Hora', pagesPerHour),
-            _buildStatColumn('Tiempo Promedio', 
-              '${(avgSessionTimeMinutes ~/ 60)}h ${(avgSessionTimeMinutes % 60).toInt()}m'),
-            _buildStatColumn('Primera Sesión', firstSessionStr),
-            _buildStatColumn('Última Sesión', lastSessionStr),
+            Row(
+              children: [
+                _buildStatColumn('Páginas/Hora', pagesPerHour),
+                const SizedBox(width: 16),
+                _buildStatColumn(
+                  'Tiempo Promedio',
+                  '${(avgSessionTimeMinutes ~/ 60)}h ${(avgSessionTimeMinutes % 60).toInt()}m',
+                ),
+                const SizedBox(width: 16),
+                _buildStatColumn('Primera Sesión', firstSessionStr),
+              ],
+            ),
+            Row(
+              children: [
+                const SizedBox(height: 20),
+                _buildStatColumn('Última Sesión', lastSessionStr),
+              ],
+            ),
           ],
         ),
       ],

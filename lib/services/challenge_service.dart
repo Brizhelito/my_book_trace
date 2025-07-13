@@ -1,6 +1,6 @@
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/services/database_service.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/services/database_service.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 import 'package:uuid/uuid.dart';
 
 class ChallengeService {

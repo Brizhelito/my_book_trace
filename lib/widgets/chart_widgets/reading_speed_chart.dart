@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
-import 'package:my_book_trace/models/reading_session.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
 import 'package:intl/intl.dart';
 
 /// Widget para mostrar un gráfico de velocidad de lectura
@@ -91,7 +91,7 @@ class ReadingSpeedChart extends StatelessWidget {
         ),
         borderData: FlBorderData(
           show: true,
-          border: Border.all(color: Colors.grey.withOpacity(0.5)),
+          border: Border.all(color: Colors.grey.withAlpha(128)),
         ),
         minX: 0,
         maxX: (displaySessions.length - 1).toDouble(),
@@ -106,13 +106,13 @@ class ReadingSpeedChart extends StatelessWidget {
             dotData: FlDotData(show: true),
             belowBarData: BarAreaData(
               show: true,
-              color: Theme.of(context).colorScheme.secondary.withOpacity(0.2),
+              color: Theme.of(context).colorScheme.secondary.withAlpha(51),
             ),
           ),
         ],
         lineTouchData: LineTouchData(
           touchTooltipData: LineTouchTooltipData(
-            tooltipBgColor: Colors.white.withOpacity(0.8),
+            tooltipBgColor: Colors.white.withAlpha(204),
             getTooltipItems: (List<LineBarSpot> touchedSpots) {
               return touchedSpots.map((spot) {
                 return LineTooltipItem(

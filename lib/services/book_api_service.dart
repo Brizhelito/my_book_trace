@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../services/logger_service.dart';
 
 /// Servicio para consultar APIs externas de libros
 class BookApiService {
@@ -35,7 +36,7 @@ class BookApiService {
       // No se encontró ningún libro o hubo un error
       return null;
     } catch (e) {
-      print('Error al consultar la API de Google Books: $e');
+      logger.error('Error al consultar la API de Google Books', error: e, tag: 'BookApiService');
       return null;
     }
   }

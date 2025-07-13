@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/models/reading_session.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
 
 /// Pantalla para registrar una sesión de lectura activa
 class ActiveReadingSessionScreen extends StatefulWidget {
@@ -54,8 +54,9 @@ class _ActiveReadingSessionScreenState
     if (!mounted ||
         _book == null ||
         _book!.pageCount == null ||
-        _book!.pageCount == 0)
+        _book!.pageCount == 0) {
       return;
+    }
 
     final currentPage = int.tryParse(_currentPageController.text) ?? _startPage;
     final pagesRead = currentPage - _startPage;
@@ -466,8 +467,8 @@ class _ActiveReadingSessionScreenState
       final updatedBook = _book!.copyWith(
         currentPage: endPage,
         status: endPage >= (_book!.pageCount ?? 0)
-            ? Book.STATUS_COMPLETED
-            : Book.STATUS_IN_PROGRESS,
+            ? Book.statusCompleted
+            : Book.statusInProgress,
         startDate: _book!.startDate ?? DateTime.now(),
         finishDate: endPage >= (_book!.pageCount ?? 0)
             ? DateTime.now()

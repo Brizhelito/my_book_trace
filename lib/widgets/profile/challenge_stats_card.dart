@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
-import 'package:my_book_trace/models/challenge.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/models/challenge.dart';
 
 /// Widget que muestra estadísticas de desafíos del usuario
 class ChallengeStatsCard extends StatefulWidget {
@@ -190,7 +190,7 @@ class _ChallengeStatsCardState extends State<ChallengeStatsCard> {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           child: Icon(icon, color: color, size: 24),
         ),
         const SizedBox(height: 8),
@@ -241,7 +241,7 @@ class _ChallengeStatsCardState extends State<ChallengeStatsCard> {
           ),
         ),
         const SizedBox(height: 8),
-        ...activeChallenges.take(3).map(_buildChallengeItem).toList(),
+        ...activeChallenges.take(3).map(_buildChallengeItem),
         if (activeChallenges.length > 3)
           Padding(
             padding: const EdgeInsets.only(top: 8.0),

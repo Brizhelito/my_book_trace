@@ -164,7 +164,7 @@ class GenreStatsCard extends StatelessWidget {
                                   height: 12,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: Colors.grey.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),
@@ -282,7 +282,7 @@ class GenreStatsCard extends StatelessWidget {
                                   height: 12,
                                   width: double.infinity,
                                   decoration: BoxDecoration(
-                                    color: Colors.grey.withOpacity(0.2),
+                                    color: Colors.grey.withValues(alpha: 0.2),
                                     borderRadius: BorderRadius.circular(10),
                                   ),
                                 ),

@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/screens/book_screens/barcode_scanner_screen.dart';
-import 'package:my_book_trace/services/book_api_service.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/screens/book_screens/barcode_scanner_screen.dart';
+import 'package:MyBookTrace/services/book_api_service.dart';
 
 /// Pantalla para añadir o editar un libro
 class AddEditBookScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
   final _genreController = TextEditingController();
   final _languageController = TextEditingController();
 
-  String _selectedStatus = Book.STATUS_NOT_STARTED;
+  String _selectedStatus = Book.statusNotStarted;
   double _rating = 0;
   bool _isLoading = false;
   bool _isLoadingIsbn = false;
@@ -94,13 +94,15 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
         });
       }
     } catch (e) {
-      // Mostrar error
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error al cargar el libro: $e'),
-          backgroundColor: Colors.red,
-        ),
-      );
+      // Mostrar error - verificar si aún está montado el widget
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error al cargar el libro: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
     } finally {
       setState(() {
         _isLoading = false;
@@ -460,19 +462,19 @@ class _AddEditBookScreenState extends State<AddEditBookScreen> {
                       ),
                       items: [
                         DropdownMenuItem(
-                          value: Book.STATUS_NOT_STARTED,
+                          value: Book.statusNotStarted,
                           child: const Text('No iniciado'),
                         ),
                         DropdownMenuItem(
-                          value: Book.STATUS_IN_PROGRESS,
+                          value: Book.statusInProgress,
                           child: const Text('En progreso'),
                         ),
                         DropdownMenuItem(
-                          value: Book.STATUS_COMPLETED,
+                          value: Book.statusCompleted,
                           child: const Text('Completado'),
                         ),
                         DropdownMenuItem(
-                          value: Book.STATUS_ABANDONED,
+                          value: Book.statusAbandoned,
                           child: const Text('Abandonado'),
                         ),
                       ],

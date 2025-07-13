@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:my_book_trace/models/reading_session.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
 
 /// Pantalla para mostrar el historial de sesiones de lectura
 class ReadingSessionHistoryScreen extends StatefulWidget {

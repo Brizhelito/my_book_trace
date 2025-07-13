@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/models/reading_session.dart';
-import 'package:my_book_trace/repositories/reading_session_repository.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/models/book.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
+import 'package:MyBookTrace/repositories/reading_session_repository.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/models/book.dart';
 
 /// Provider para manejar el estado de las sesiones de lectura
 class ReadingSessionProvider extends ChangeNotifier {
@@ -159,7 +159,9 @@ class ReadingSessionProvider extends ChangeNotifier {
         // Validación de páginas válidas
         final pagesRead = session.endPage - session.startPage;
         if (pagesRead <= 0) {
-          debugPrint('Advertencia: Páginas leídas inválidas (${pagesRead}). No se actualizarán desafíos de páginas.');
+          debugPrint(
+            'Advertencia: Páginas leídas inválidas ($pagesRead). No se actualizarán desafíos de páginas.',
+          );
         } else {
           debugPrint('Actualizando ${pagesChallenges.length} desafíos de páginas con $pagesRead páginas leídas');
           for (final challenge in pagesChallenges) {
@@ -230,7 +232,8 @@ class ReadingSessionProvider extends ChangeNotifier {
               if (bookChallenges.isNotEmpty) {
                 // Verificar si el libro se completó con esta sesión
                 // Un libro se considera completado si su estado es COMPLETED
-                final wasJustCompleted = book.status == Book.STATUS_COMPLETED &&
+                final wasJustCompleted =
+                    book.status == Book.statusCompleted &&
                                      book.pageCount != null && 
                                      session.endPage >= book.pageCount!;
                 

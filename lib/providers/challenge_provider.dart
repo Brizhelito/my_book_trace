@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/services/challenge_service.dart';
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/services/challenge_service.dart';
 
 class ChallengeProvider extends ChangeNotifier {
   final ChallengeService _challengeService = ChallengeService();

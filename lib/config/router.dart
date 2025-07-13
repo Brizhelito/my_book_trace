@@ -1,25 +1,27 @@
+import 'package:MyBookTrace/constants/app_constants.dart';
+import 'package:MyBookTrace/screens/splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
 
 // Importaciones de pantallas
-import 'package:my_book_trace/screens/splash_screen.dart';
-import 'package:my_book_trace/screens/book_screens/book_list_screen.dart';
-import 'package:my_book_trace/screens/book_screens/book_detail_screen.dart';
-import 'package:my_book_trace/screens/book_screens/add_edit_book_screen.dart';
-import 'package:my_book_trace/screens/reading_screens/active_reading_session_screen.dart';
-import 'package:my_book_trace/screens/reading_screens/reading_statistics_screen.dart';
-import 'package:my_book_trace/screens/reading_screens/reading_session_history_screen.dart';
-import 'package:my_book_trace/screens/challenges/challenges_screen.dart';
-import 'package:my_book_trace/screens/profile/profile_screen.dart';
-import 'package:my_book_trace/widgets/shell_scaffold.dart';
-import 'package:my_book_trace/screens/home_screen.dart';
+import 'package:MyBookTrace/screens/book_screens/book_list_screen.dart';
+import 'package:MyBookTrace/screens/book_screens/book_detail_screen.dart';
+import 'package:MyBookTrace/screens/book_screens/add_edit_book_screen.dart';
+import 'package:MyBookTrace/screens/reading_screens/active_reading_session_screen.dart';
+import 'package:MyBookTrace/screens/reading_screens/reading_statistics_screen.dart';
+import 'package:MyBookTrace/screens/reading_screens/reading_session_history_screen.dart';
+import 'package:MyBookTrace/screens/challenges/challenges_screen.dart';
+import 'package:MyBookTrace/screens/profile/profile_screen.dart';
+import 'package:MyBookTrace/widgets/shell_scaffold.dart';
+import 'package:MyBookTrace/screens/home_screen.dart';
 
 /// Configuración del enrutador de la aplicación utilizando Go Router
 ///
 /// Define todas las rutas de la aplicación y cómo se relacionan entre sí.
+final GlobalKey<NavigatorState> shellNavigatorKey = GlobalKey<NavigatorState>();
+
 final GoRouter appRouter = GoRouter(
-  initialLocation: AppRoutes.home,
+  initialLocation: AppRoutes.splash,
   debugLogDiagnostics: true,
   routes: [
     // Ruta de splash (fuera de la shell)
@@ -30,6 +32,7 @@ final GoRouter appRouter = GoRouter(
 
     // Configuración de ShellRoute para la navegación principal con barra inferior
     ShellRoute(
+      navigatorKey: shellNavigatorKey,
       builder: (BuildContext context, GoRouterState state, Widget child) {
         // Determinamos qué índice está seleccionado basado en la ruta
         int selectedIndex;
@@ -49,7 +52,11 @@ final GoRouter appRouter = GoRouter(
           selectedIndex = 0; // Default a home
         }
 
-        return ShellScaffold(selectedIndex: selectedIndex, child: child);
+        return ShellScaffold(
+          selectedIndex: selectedIndex,
+          child: child,
+          shellNavigatorKey: shellNavigatorKey,
+        );
       },
       routes: [
         // Rutas dentro de la shell - Todas comparten la barra de navegación
@@ -61,8 +68,52 @@ final GoRouter appRouter = GoRouter(
 
         // Rutas de libros - Books branch
         GoRoute(
-          path: AppRoutes.bookList,
+          path: AppRoutes.bookList, // '/books'
           builder: (context, state) => const BookListScreen(),
+          routes: [
+            // Anidamos las rutas que deben mantener el shell
+            GoRoute(
+              path: 'add', // Se convierte en '/books/add'
+              pageBuilder: (context, state) {
+                return CustomTransitionPage<void>(
+                  key: state.pageKey,
+                  child: const AddEditBookScreen(),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                );
+              },
+            ),
+            GoRoute(
+              path: ':id', // Se convierte en '/books/:id'
+              pageBuilder: (context, state) {
+                final bookId = state.pathParameters['id']!;
+                return CustomTransitionPage<void>(
+                  key: state.pageKey,
+                  child: BookDetailScreen(bookId: bookId),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                );
+              },
+            ),
+            GoRoute(
+              path: ':id/edit', // Se convierte en '/books/:id/edit'
+              pageBuilder: (context, state) {
+                final bookId = state.pathParameters['id']!;
+                return CustomTransitionPage<void>(
+                  key: state.pageKey,
+                  child: AddEditBookScreen(bookId: bookId),
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) {
+                        return FadeTransition(opacity: animation, child: child);
+                      },
+                );
+              },
+            ),
+          ],
         ),
 
         // Rutas de estadísticas - Statistics branch
@@ -81,83 +132,6 @@ final GoRouter appRouter = GoRouter(
         GoRoute(
           path: AppRoutes.profile,
           builder: (context, state) => const ProfileScreen(),
-        ),
-      ],
-    ),
-
-    // Ruta para añadir libro
-    GoRoute(
-      path: AppRoutes.addBook,
-      pageBuilder: (context, state) {
-        debugPrint('Router: Navegando a AddEditBookScreen (añadir nuevo libro)');
-        return CustomTransitionPage<void>(
-          key: state.pageKey,
-          child: const AddEditBookScreen(),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        );
-      },
-    ),
-
-    GoRoute(
-      path: AppRoutes.editBook,
-      pageBuilder: (context, state) {
-        final bookId = state.pathParameters['id']!;
-        return CustomTransitionPage<void>(
-          key: state.pageKey,
-          child: AddEditBookScreen(bookId: bookId),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        );
-      },
-    ),
-
-    // Rutas fuera de la shell - No tienen la barra de navegación
-    // Rutas de detalle de libro
-    GoRoute(
-      path: AppRoutes.bookDetail,
-      pageBuilder: (context, state) {
-        final bookId = state.pathParameters['id']!;
-        return CustomTransitionPage<void>(
-          key: state.pageKey,
-          child: BookDetailScreen(bookId: bookId),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return FadeTransition(opacity: animation, child: child);
-          },
-        );
-      },
-      routes: [
-        // Ruta anidada para notas del libro
-        GoRoute(
-          path: AppRoutes.bookNotes,
-          pageBuilder: (context, state) {
-            final bookId = state.pathParameters['id']!;
-            return CustomTransitionPage<void>(
-              key: state.pageKey,
-              child: BookDetailScreen(bookId: bookId, initialTab: 'notes'),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-            );
-          },
-        ),
-        // Ruta anidada para estadísticas del libro
-        GoRoute(
-          path: AppRoutes.bookStats,
-          pageBuilder: (context, state) {
-            final bookId = state.pathParameters['id']!;
-            return CustomTransitionPage<void>(
-              key: state.pageKey,
-              child: BookDetailScreen(bookId: bookId, initialTab: 'stats'),
-              transitionsBuilder:
-                  (context, animation, secondaryAnimation, child) {
-                    return FadeTransition(opacity: animation, child: child);
-                  },
-            );
-          },
         ),
       ],
     ),

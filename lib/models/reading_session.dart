@@ -136,6 +136,6 @@ class ReadingSession {
 
   @override
   String toString() {
-    return 'ReadingSession{id: $id, bookId: $bookId, date: $date, startPage: $startPage, endPage: $endPage, duration: ${formattedDuration}, pages: $pagesRead}';
+    return 'ReadingSession{id: $id, bookId: $bookId, date: $date, startPage: $startPage, endPage: $endPage, duration: $formattedDuration, pages: $pagesRead}';
   }
 }

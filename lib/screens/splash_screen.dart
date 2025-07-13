@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 
 /// Pantalla de inicio que se muestra al cargar la aplicación
 class SplashScreen extends StatefulWidget {

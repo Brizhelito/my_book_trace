@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 
 class ChallengeCard extends StatelessWidget {
   final Challenge challenge;
@@ -312,8 +312,6 @@ class ChallengeCard extends StatelessWidget {
 
   // Mostrar detalles completos del desafío
   void _showChallengeDetails(BuildContext context) {
-    // TODO: Navegar a la pantalla de detalles del desafío
-    // Por ahora, mostramos un simple diálogo con detalles
     showDialog(
       context: context,
       builder: (context) => AlertDialog(

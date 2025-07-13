@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 import 'package:go_router/go_router.dart';
 
 /// Widget que muestra los libros favoritos del usuario
@@ -45,7 +45,7 @@ class FavoriteBooksCard extends StatelessWidget {
             const SizedBox(height: 16),
             
             // Lista de libros favoritos
-            ...favoriteBooks.map((book) => _buildBookItem(context, book)).toList(),
+            ...favoriteBooks.map((book) => _buildBookItem(context, book)),
           ],
         ),
       ),

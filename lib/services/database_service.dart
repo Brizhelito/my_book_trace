@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 
 class DatabaseService {
   static final DatabaseService _instance = DatabaseService._internal();

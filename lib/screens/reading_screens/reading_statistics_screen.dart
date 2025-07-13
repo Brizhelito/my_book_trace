@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
-import 'package:my_book_trace/widgets/chart_widgets/reading_progress_chart.dart';
-import 'package:my_book_trace/widgets/chart_widgets/reading_speed_chart.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/widgets/chart_widgets/reading_progress_chart.dart';
+import 'package:MyBookTrace/widgets/chart_widgets/reading_speed_chart.dart';
 
 /// Pantalla para mostrar estadísticas de lectura
 class ReadingStatisticsScreen extends StatefulWidget {

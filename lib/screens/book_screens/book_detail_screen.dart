@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/models/reading_session.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
 import 'package:intl/intl.dart';
 
 /// Pantalla de detalles del libro seleccionado
@@ -207,7 +207,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     switch (_tabController.index) {
       case 0:
         // Pestaña de detalles - Botón para comenzar a leer
-        if (_book!.status != Book.STATUS_COMPLETED) {
+        if (_book!.status != Book.statusCompleted) {
           return FloatingActionButton.extended(
             heroTag: 'book_detail_read_fab',
             onPressed: () {
@@ -217,7 +217,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
             },
             icon: const Icon(Icons.menu_book),
             label: Text(
-              _book!.status == Book.STATUS_IN_PROGRESS
+              _book!.status == Book.statusInProgress
                   ? 'Continuar lectura'
                   : 'Comenzar lectura',
             ),
@@ -233,7 +233,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
           },
           icon: const Icon(Icons.note_add),
           label: Text(
-            _book!.status == Book.STATUS_IN_PROGRESS
+            _book!.status == Book.statusInProgress
                 ? 'Continuar lectura'
                 : 'Comenzar lectura',
           ),
@@ -271,7 +271,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                       : null,
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black.withOpacity(0.2),
+                      color: Colors.black.withValues(alpha: 0.2),
                       blurRadius: 5,
                       offset: const Offset(0, 3),
                     ),
@@ -659,30 +659,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     }
   }
 
-  // Calcular páginas por hora
-  String _calculatePagesPerHour() {
-    if (_bookSessions.isEmpty) {
-      return '0 págs/hora';
-    }
-
-    int totalPages = 0;
-    Duration totalDuration = Duration.zero;
-
-    for (final session in _bookSessions) {
-      totalPages += (session.endPage - session.startPage);
-      totalDuration += session.duration;
-    }
-
-    // Evitar división por cero
-    if (totalDuration.inSeconds == 0) {
-      return '0 págs/hora';
-    }
-
-    // Calcular páginas por hora: (páginas * 3600) / segundos totales
-    final pagesPerHour = (totalPages * 3600) / totalDuration.inSeconds;
-
-    return '${pagesPerHour.toStringAsFixed(1)} págs/hora';
-  }
+  // Método eliminado por no estar en uso
 
   // Calcular el tiempo promedio por sesión
   String _calculateAverageSessionTime() {
@@ -768,15 +745,15 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     String statusText;
 
     switch (_book?.status) {
-      case Book.STATUS_IN_PROGRESS:
+      case Book.statusInProgress:
         chipColor = Colors.blue;
         statusText = 'Leyendo';
         break;
-      case Book.STATUS_COMPLETED:
+      case Book.statusCompleted:
         chipColor = Colors.green;
         statusText = 'Completado';
         break;
-      case Book.STATUS_ABANDONED:
+      case Book.statusAbandoned:
         chipColor = Colors.red;
         statusText = 'Abandonado';
         break;
@@ -794,7 +771,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
               : Colors.white,
         ),
       ),
-      backgroundColor: chipColor.withOpacity(0.2),
+      backgroundColor: chipColor.withValues(alpha: 0.2),
       side: BorderSide(color: chipColor),
     );
   }
@@ -858,13 +835,15 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                   listen: false,
                 ).deleteBook(_book!.id!);
 
-                if (result && mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('Libro eliminado correctamente'),
-                    ),
-                  );
-                  context.pop();
+                if (result) {
+                  if (mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text('Libro eliminado correctamente'),
+                      ),
+                    );
+                    context.pop();
+                  }
                 }
               }
             },

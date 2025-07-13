@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:back_button_interceptor/back_button_interceptor.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 
 /// Widget de Scaffold para manejar la shell de navegación con barra inferior
 /// Este widget mantiene la barra de navegación visible mientras cambia el contenido principal
 class ShellScaffold extends StatefulWidget {
-  /// Widget hijo a mostrar como contenido principal
   final Widget child;
-
-  /// Índice de la pestaña seleccionada
   final int selectedIndex;
+  final GlobalKey<NavigatorState> shellNavigatorKey;
 
   const ShellScaffold({
     super.key,
     required this.child,
     required this.selectedIndex,
+    required this.shellNavigatorKey,
   });
 
   @override
@@ -39,6 +40,52 @@ class _ShellScaffoldState extends State<ShellScaffold> {
     'Desafíos',
     'Perfil',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    // Registrar el interceptor de botón atrás
+    BackButtonInterceptor.add(_backButtonInterceptor);
+  }
+
+  @override
+  void dispose() {
+    BackButtonInterceptor.remove(_backButtonInterceptor);
+    super.dispose();
+  }
+
+  // Función que intercepta el botón atrás
+  bool _backButtonInterceptor(bool stopDefaultButtonEvent, RouteInfo info) {
+    // Obtener la ubicación actual de la ruta completa
+    final String location = GoRouterState.of(context).uri.toString();
+    debugPrint('BackButtonInterceptor: location = $location');
+
+    // Exactamente la ruta /home: mostrar diálogo
+    if (location == '/home') {
+      debugPrint('BackButtonInterceptor: En HOME, mostrando diálogo');
+      _onWillPop(context).then((shouldPop) {
+        if (shouldPop) {
+          SystemNavigator.pop();
+        }
+      });
+      return true; // Interceptamos para mostrar diálogo
+    }
+    // Exactamente rutas principales del primer nivel
+    else if (location == '/books' ||
+        location == '/statistics' ||
+        location == '/challenges' ||
+        location == '/profile') {
+      debugPrint('BackButtonInterceptor: En ruta principal, yendo a HOME');
+      context.go('/home');
+      return true; // Interceptamos para ir a home
+    }
+
+    // En subrutas como /books/123: NO interceptar (dejar que Flutter/GoRouter maneje)
+    debugPrint(
+      'BackButtonInterceptor: En subruta, permitiendo navegación normal',
+    );
+    return false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,5 +125,30 @@ class _ShellScaffoldState extends State<ShellScaffold> {
         context.go(AppRoutes.profile);
         break;
     }
+  }
+
+  /// Muestra un diálogo de confirmación cuando el usuario intenta salir de la app
+  /// Retorna true si el usuario confirma que desea salir
+  Future<bool> _onWillPop(BuildContext context) async {
+    return await showDialog<bool>(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('¿Deseas salir de la aplicación?'),
+            content: const Text(
+              'Presiona Cancelar para permanecer en la aplicación.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                child: const Text('Cancelar'),
+              ),
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                child: const Text('Salir'),
+              ),
+            ],
+          ),
+        ) ??
+        false; // Return false if dialog is dismissed
   }
 }

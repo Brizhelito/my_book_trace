@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/repositories/book_repository.dart';
-import 'package:my_book_trace/services/preferences_service.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/repositories/book_repository.dart';
+import 'package:MyBookTrace/services/preferences_service.dart';
 
 /// Provider para manejar el estado de los libros en la aplicación
 class BookProvider extends ChangeNotifier {
@@ -50,10 +50,14 @@ class BookProvider extends ChangeNotifier {
   }
   
   // Contador por estado
-  int get readingCount => _books.where((book) => book.status == Book.STATUS_IN_PROGRESS).length;
-  int get completedCount => _books.where((book) => book.status == Book.STATUS_COMPLETED).length;
-  int get notStartedCount => _books.where((book) => book.status == Book.STATUS_NOT_STARTED).length;
-  int get abandonedCount => _books.where((book) => book.status == Book.STATUS_ABANDONED).length;
+  int get readingCount =>
+      _books.where((book) => book.status == Book.statusInProgress).length;
+  int get completedCount =>
+      _books.where((book) => book.status == Book.statusCompleted).length;
+  int get notStartedCount =>
+      _books.where((book) => book.status == Book.statusNotStarted).length;
+  int get abandonedCount =>
+      _books.where((book) => book.status == Book.statusAbandoned).length;
   
   // Inicializar provider
   Future<void> initialize() async {

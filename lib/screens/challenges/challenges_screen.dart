@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:my_book_trace/models/challenge.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
-import 'package:my_book_trace/widgets/challenges/challenge_card.dart';
-import 'package:my_book_trace/widgets/challenges/create_challenge_dialog.dart';
-import 'package:my_book_trace/widgets/common/loading_indicator.dart';
-import 'package:my_book_trace/widgets/common/empty_state.dart';
-import 'package:my_book_trace/widgets/common/error_message.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/challenge.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/widgets/challenges/challenge_card.dart';
+import 'package:MyBookTrace/widgets/challenges/create_challenge_dialog.dart';
+import 'package:MyBookTrace/widgets/common/loading_indicator.dart';
+import 'package:MyBookTrace/widgets/common/empty_state.dart';
+import 'package:MyBookTrace/widgets/common/error_message.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
 
 class ChallengesScreen extends StatefulWidget {
   const ChallengesScreen({super.key});
@@ -29,6 +29,9 @@ class _ChallengesScreenState extends State<ChallengesScreen>
     _tabController = TabController(length: 3, vsync: this);
     _selectedMonth = DateTime.now();
 
+    // Agregar listener para actualizar la UI cuando cambia la pestaña
+    _tabController.addListener(_handleTabSelection);
+
     // Inicializar datos de localización para español
     initializeDateFormatting('es_ES', null);
 
@@ -36,6 +39,14 @@ class _ChallengesScreenState extends State<ChallengesScreen>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _loadChallenges();
     });
+  }
+  
+  // Manejador para el cambio de pestaña
+  void _handleTabSelection() {
+    // Solo reconstruir si la pestaña cambió y el widget está montado
+    if (_tabController.indexIsChanging && mounted) {
+      setState(() {});
+    }
   }
 
   @override
@@ -136,66 +147,18 @@ class _ChallengesScreenState extends State<ChallengesScreen>
             ),
           ),
 
-          // Lista de desafíos
+          // TabBarView para permitir deslizar entre pestañas
           Expanded(
-            child: Consumer<ChallengeProvider>(
-              builder: (context, provider, child) {
-                if (provider.isLoading) {
-                  return const LoadingIndicator();
-                }
-
-                if (provider.error != null) {
-                  return ErrorMessage(
-                    message: provider.error!,
-                    onRetry: _loadChallenges,
-                  );
-                }
-
-                // Filtrar desafíos según la pestaña seleccionada
-                List<Challenge> challenges;
-                switch (_tabController.index) {
-                  case 0: // En Progreso
-                    challenges = provider.monthlyChallenges
-                        .where((c) => !c.isCompleted && c.isActive)
-                        .toList();
-                    break;
-                  case 1: // Completados
-                    challenges = provider.monthlyChallenges
-                        .where((c) => c.isCompleted)
-                        .toList();
-                    break;
-                  case 2: // Todos
-                  default:
-                    challenges = provider.monthlyChallenges;
-                }
-
-                if (challenges.isEmpty) {
-                  return EmptyState(
-                    icon: Icons.emoji_events_outlined,
-                    title: 'No hay desafíos',
-                    message: 'Crea tu primer desafío para este mes',
-                    buttonLabel: 'Crear Desafío',
-                    onButtonPressed: _showCreateChallengeDialog,
-                  );
-                }
-
-                return RefreshIndicator(
-                  onRefresh: _loadChallenges,
-                  child: ListView.builder(
-                    padding: const EdgeInsets.all(UiConstants.defaultPadding),
-                    itemCount: challenges.length,
-                    itemBuilder: (context, index) {
-                      final challenge = challenges[index];
-                      return Padding(
-                        padding: const EdgeInsets.only(
-                          bottom: UiConstants.defaultPadding,
-                        ),
-                        child: ChallengeCard(challenge: challenge),
-                      );
-                    },
-                  ),
-                );
-              },
+            child: TabBarView(
+              controller: _tabController,
+              children: [
+                // Vista de desafíos en progreso
+                _buildChallengeList(0),
+                // Vista de desafíos completados
+                _buildChallengeList(1),
+                // Vista de todos los desafíos
+                _buildChallengeList(2),
+              ],
             ),
           ),
         ],
@@ -206,6 +169,97 @@ class _ChallengesScreenState extends State<ChallengesScreen>
         label: const Text('Nuevo Desafío'),
         heroTag: 'create_challenge',
       ),
+    );
+  }
+
+  // Widget para construir la lista de desafíos según la pestaña
+  Widget _buildChallengeList(int tabIndex) {
+    return Consumer<ChallengeProvider>(
+      builder: (context, provider, child) {
+        if (provider.isLoading) {
+          return const LoadingIndicator();
+        }
+
+        if (provider.error != null) {
+          return ErrorMessage(
+            message: provider.error!,
+            onRetry: _loadChallenges,
+          );
+        }
+
+        // Filtrar desafíos según la pestaña seleccionada
+        List<Challenge> challenges;
+        switch (tabIndex) {
+          case 0: // En Progreso
+            challenges = provider.monthlyChallenges
+                .where((c) => !c.isCompleted && c.isActive)
+                .toList();
+            break;
+          case 1: // Completados
+            challenges = provider.monthlyChallenges
+                .where((c) => c.isCompleted)
+                .toList();
+            break;
+          case 2: // Todos
+          default:
+            challenges = provider.monthlyChallenges;
+        }
+
+        if (challenges.isEmpty) {
+          // Mostrar mensaje personalizado según la pestaña activa
+          String title;
+          String message;
+          String? buttonLabel;
+          VoidCallback? onButtonPressed;
+
+          switch (tabIndex) {
+            case 0: // En Progreso
+              title = 'No hay desafíos en progreso';
+              message = 'Crea un nuevo desafío para comenzar';
+              buttonLabel = 'Crear Desafío';
+              onButtonPressed = _showCreateChallengeDialog;
+              break;
+            case 1: // Completados
+              title = 'No hay desafíos completados';
+              message = 'Completa tus desafíos activos para verlos aquí';
+              buttonLabel = null;
+              onButtonPressed = null;
+              break;
+            case 2: // Todos
+            default:
+              title = 'No hay desafíos';
+              message = 'Crea tu primer desafío para este mes';
+              buttonLabel = 'Crear Desafío';
+              onButtonPressed = _showCreateChallengeDialog;
+              break;
+          }
+
+          return EmptyState(
+            icon: Icons.emoji_events_outlined,
+            title: title,
+            message: message,
+            buttonLabel: buttonLabel,
+            onButtonPressed: onButtonPressed,
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: _loadChallenges,
+          child: ListView.builder(
+            padding: const EdgeInsets.all(UiConstants.defaultPadding),
+            itemCount: challenges.length,
+            itemBuilder: (context, index) {
+              final challenge = challenges[index];
+              return Padding(
+                padding: const EdgeInsets.only(
+                  bottom: UiConstants.defaultPadding,
+                ),
+                child: ChallengeCard(challenge: challenge),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

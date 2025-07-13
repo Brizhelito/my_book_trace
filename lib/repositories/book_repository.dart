@@ -1,17 +1,23 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/services/database_service.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/services/database_service.dart';
+import 'package:MyBookTrace/services/logger_service.dart';
 
 /// Repositorio para manejar todas las operaciones relacionadas con libros
 class BookRepository {
   final DatabaseService _databaseService = DatabaseService();
   final Uuid _uuid = const Uuid();
 
+  /// Obtener instancia de la base de datos
+  Future<Database> getDatabase() async {
+    return _databaseService.database;
+  }
+
   /// Obtener todos los libros
   Future<List<Book>> getAllBooks() async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       DbConstants.tableBooks,
     );
@@ -21,7 +27,7 @@ class BookRepository {
 
   /// Obtener libros por estado
   Future<List<Book>> getBooksByStatus(String status) async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       DbConstants.tableBooks,
       where: 'status = ?',
@@ -33,7 +39,7 @@ class BookRepository {
 
   /// Buscar libros por título o autor
   Future<List<Book>> searchBooks(String query) async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       DbConstants.tableBooks,
       where: 'title LIKE ? OR author LIKE ?',
@@ -55,7 +61,7 @@ class BookRepository {
     String? sortBy,
     bool ascending = true,
   }) async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
 
     // Construir la consulta WHERE de forma dinámica
     final List<String> whereConditions = [];
@@ -141,7 +147,7 @@ class BookRepository {
 
   /// Obtener un libro por su ID
   Future<Book?> getBookById(String id) async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       DbConstants.tableBooks,
       where: 'id = ?',
@@ -149,16 +155,14 @@ class BookRepository {
       limit: 1,
     );
 
-    if (maps.isNotEmpty) {
-      return Book.fromMap(maps.first);
-    }
+    if (maps.isEmpty) return null;
 
-    return null;
+    return Book.fromMap(maps.first);
   }
 
   /// Obtener un libro por su ISBN
   Future<Book?> getBookByIsbn(String isbn) async {
-    final db = await _databaseService.database;
+    final db = await getDatabase();
     final List<Map<String, dynamic>> maps = await db.query(
       DbConstants.tableBooks,
       where: 'isbn = ?',
@@ -166,18 +170,19 @@ class BookRepository {
       limit: 1,
     );
 
-    if (maps.isNotEmpty) {
-      return Book.fromMap(maps.first);
-    }
+    if (maps.isEmpty) return null;
 
-    return null;
+    return Book.fromMap(maps.first);
   }
 
   /// Insertar un nuevo libro
   Future<String> insertBook(Book book) async {
     try {
-      print('BookRepository: Iniciando insertBook para libro: ${book.title}');
-      final db = await _databaseService.database;
+      logger.debug(
+        'Iniciando insertBook para libro: ${book.title}',
+        tag: 'BookRepository',
+      );
+      final db = await getDatabase();
       final String id = _uuid.v4();
 
       // Crear una copia del libro con el ID generado
@@ -185,7 +190,7 @@ class BookRepository {
 
       // Log del mapa de datos
       final bookMap = bookWithId.toMap();
-      print('BookRepository: Datos a insertar: $bookMap');
+      logger.debug('Datos a insertar: $bookMap', tag: 'BookRepository');
 
       // Insertar en la base de datos
       await db.insert(
@@ -194,7 +199,10 @@ class BookRepository {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
-      print('BookRepository: Libro insertado correctamente con ID: $id');
+      logger.debug(
+        'Libro insertado correctamente con ID: $id',
+        tag: 'BookRepository',
+      );
 
       // Verificar que el libro se insertó correctamente
       final List<Map<String, dynamic>> verificacion = await db.query(
@@ -203,16 +211,20 @@ class BookRepository {
         whereArgs: [id],
       );
 
-      print(
-        'BookRepository: Verificación de inserción: ${verificacion.isNotEmpty ? "Éxito" : "Fallo"}',
+      logger.debug(
+        'Verificando libro insertado con id: $id',
+        tag: 'BookRepository',
       );
       if (verificacion.isNotEmpty) {
-        print('BookRepository: Datos recuperados: ${verificacion.first}');
+        logger.debug(
+          'Datos recuperados: ${verificacion.first}',
+          tag: 'BookRepository',
+        );
       }
 
       return id;
     } catch (e) {
-      print('BookRepository: ERROR en insertBook: $e');
+      logger.error('ERROR en insertBook', error: e, tag: 'BookRepository');
       rethrow;
     }
   }
@@ -220,14 +232,15 @@ class BookRepository {
   /// Actualizar un libro existente
   Future<int> updateBook(Book book) async {
     try {
-      print(
-        'BookRepository: Iniciando updateBook para libro: ${book.title} (ID: ${book.id})',
+      logger.debug(
+        'Iniciando updateBook para libro ID: ${book.id}',
+        tag: 'BookRepository',
       );
       final db = await _databaseService.database;
 
       // Log del mapa de datos
       final bookMap = book.toMap();
-      print('BookRepository: Datos a actualizar: $bookMap');
+      logger.debug('Datos a actualizar: $bookMap', tag: 'BookRepository');
 
       final int result = await db.update(
         DbConstants.tableBooks,
@@ -237,7 +250,10 @@ class BookRepository {
         conflictAlgorithm: ConflictAlgorithm.replace,
       );
 
-      print('BookRepository: Libro actualizado. Filas afectadas: $result');
+      logger.debug(
+        'Libro actualizado. Filas afectadas: $result',
+        tag: 'BookRepository',
+      );
 
       // Verificar que el libro se actualizó correctamente
       final List<Map<String, dynamic>> verificacion = await db.query(
@@ -246,16 +262,20 @@ class BookRepository {
         whereArgs: [book.id],
       );
 
-      print(
-        'BookRepository: Verificación de actualización: ${verificacion.isNotEmpty ? "Éxito" : "Fallo"}',
+      logger.debug(
+        'Verificando libro actualizado con id: ${book.id}',
+        tag: 'BookRepository',
       );
       if (verificacion.isNotEmpty) {
-        print('BookRepository: Datos actualizados: ${verificacion.first}');
+        logger.debug(
+          'Datos actualizados: ${verificacion.first}',
+          tag: 'BookRepository',
+        );
       }
 
       return result;
     } catch (e) {
-      print('BookRepository: ERROR en updateBook: $e');
+      logger.error('ERROR en updateBook', error: e, tag: 'BookRepository');
       rethrow;
     }
   }
@@ -291,10 +311,10 @@ class BookRepository {
     ''');
 
     final Map<String, int> countByStatus = {
-      Book.STATUS_NOT_STARTED: 0,
-      Book.STATUS_IN_PROGRESS: 0,
-      Book.STATUS_COMPLETED: 0,
-      Book.STATUS_ABANDONED: 0,
+      Book.statusNotStarted: 0,
+      Book.statusInProgress: 0,
+      Book.statusCompleted: 0,
+      Book.statusAbandoned: 0,
     };
 
     for (var row in result) {

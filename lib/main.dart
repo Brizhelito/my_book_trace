@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/config/router.dart';
-import 'package:my_book_trace/services/database_service.dart';
+import 'package:MyBookTrace/config/router.dart';
+import 'package:MyBookTrace/services/database_service.dart';
 
 // Providers
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
-import 'package:my_book_trace/providers/challenge_provider.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/providers/challenge_provider.dart';
 
 void main() async {
   // Asegurar que Flutter esté inicializado
@@ -70,7 +70,7 @@ class MyBookTrace extends StatelessWidget {
         darkTheme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(
-            seedColor: Colors.indigo,
+            seedColor: const Color(0xFF3F51B5),
             brightness: Brightness.dark,
           ),
           fontFamily: 'Roboto',

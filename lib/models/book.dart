@@ -190,8 +190,8 @@ class Book {
   }
 
   /// Estados disponibles para un libro
-  static const String STATUS_NOT_STARTED = 'no_iniciado';
-  static const String STATUS_IN_PROGRESS = 'en_progreso';
-  static const String STATUS_COMPLETED = 'finalizado';
-  static const String STATUS_ABANDONED = 'abandonado';
+  static const String statusNotStarted = 'no_iniciado';
+  static const String statusInProgress = 'en_progreso';
+  static const String statusCompleted = 'finalizado';
+  static const String statusAbandoned = 'abandonado';
 }

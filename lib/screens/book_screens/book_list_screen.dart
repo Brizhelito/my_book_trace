@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:my_book_trace/constants/app_constants.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
+import 'package:MyBookTrace/constants/app_constants.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
 import 'package:provider/provider.dart';
 
 /// Pantalla que muestra la lista de libros del usuario
@@ -139,13 +139,13 @@ class _BookListScreenState extends State<BookListScreen> with SingleTickerProvid
                 bookProvider.setFilter('all');
                 break;
               case 1:
-                bookProvider.setFilter(Book.STATUS_IN_PROGRESS);
+                bookProvider.setFilter(Book.statusInProgress);
                 break;
               case 2:
-                bookProvider.setFilter(Book.STATUS_COMPLETED);
+                bookProvider.setFilter(Book.statusCompleted);
                 break;
               case 3:
-                bookProvider.setFilter(Book.STATUS_NOT_STARTED);
+                bookProvider.setFilter(Book.statusNotStarted);
                 break;
             }
           },
@@ -164,11 +164,11 @@ class _BookListScreenState extends State<BookListScreen> with SingleTickerProvid
                 // Todos los libros
                 _buildBookGrid('all'),
                 // Libros en progreso
-                _buildBookGrid(Book.STATUS_IN_PROGRESS),
+                _buildBookGrid(Book.statusInProgress),
                 // Libros completados
-                _buildBookGrid(Book.STATUS_COMPLETED),
+                _buildBookGrid(Book.statusCompleted),
                 // Libros pendientes
-                _buildBookGrid(Book.STATUS_NOT_STARTED),
+                _buildBookGrid(Book.statusNotStarted),
               ],
             ),
           ),

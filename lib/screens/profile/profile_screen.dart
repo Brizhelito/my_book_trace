@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:my_book_trace/providers/book_provider.dart';
-import 'package:my_book_trace/providers/reading_session_provider.dart';
-import 'package:my_book_trace/models/book.dart';
-import 'package:my_book_trace/models/reading_session.dart';
-import 'package:my_book_trace/widgets/profile/genre_stats_card.dart';
-import 'package:my_book_trace/widgets/profile/reading_habits_card.dart';
-import 'package:my_book_trace/widgets/profile/favorite_books_card.dart';
-import 'package:my_book_trace/widgets/profile/challenge_stats_card.dart';
+import 'package:MyBookTrace/providers/book_provider.dart';
+import 'package:MyBookTrace/providers/reading_session_provider.dart';
+import 'package:MyBookTrace/models/book.dart';
+import 'package:MyBookTrace/models/reading_session.dart';
+import 'package:MyBookTrace/widgets/profile/genre_stats_card.dart';
+import 'package:MyBookTrace/widgets/profile/reading_habits_card.dart';
+import 'package:MyBookTrace/widgets/profile/favorite_books_card.dart';
+import 'package:MyBookTrace/widgets/profile/challenge_stats_card.dart';
 
 /// Pantalla de perfil del usuario
 /// 
@@ -43,12 +43,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     
     try {
-      // Cargar libros
+      // Obtener los providers antes del código asíncrono
       final bookProvider = Provider.of<BookProvider>(context, listen: false);
+      final sessionProvider = Provider.of<ReadingSessionProvider>(
+        context,
+        listen: false,
+      );
+
+      // Cargar libros
       final books = await bookProvider.getAllBooks();
       
       // Cargar sesiones de lectura
-      final sessionProvider = Provider.of<ReadingSessionProvider>(context, listen: false);
       final sessions = await sessionProvider.getAllSessions();
       
       if (mounted) {
@@ -200,8 +205,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final totalPages = _sessions.fold<int>(
       0,
       (total, session) {
-        final endPage = session.endPage ?? 0;
-        final startPage = session.startPage ?? 0;
+      final endPage = session.endPage;
+      final startPage = session.startPage;
         return total + (endPage - startPage);
       },
     );
@@ -262,7 +267,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       children: [
         CircleAvatar(
           radius: 24,
-          backgroundColor: color.withOpacity(0.2),
+          backgroundColor: color.withValues(alpha: 0.2),
           child: Icon(icon, color: color, size: 24),
         ),
         const SizedBox(height: 8),
