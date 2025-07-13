@@ -54,8 +54,8 @@ final GoRouter appRouter = GoRouter(
 
         return ShellScaffold(
           selectedIndex: selectedIndex,
-          child: child,
           shellNavigatorKey: shellNavigatorKey,
+          child: child,
         );
       },
       routes: [
@@ -135,17 +135,6 @@ final GoRouter appRouter = GoRouter(
         ),
       ],
     ),
-
-    // Rutas relacionadas con sesiones de lectura
-    /* // Ruta comentada hasta implementar la pantalla correspondiente
-    GoRoute(
-      path: AppRoutes.readingSession,
-      builder: (context, state) {
-        final sessionId = state.pathParameters['id']!;
-        return ReadingSessionScreen(sessionId: sessionId);
-      },
-    ),
-    */
     GoRoute(
       path: AppRoutes.activeReadingSession,
       builder: (context, state) {
@@ -167,24 +156,6 @@ final GoRouter appRouter = GoRouter(
       path: AppRoutes.statistics,
       builder: (context, state) => const ReadingStatisticsScreen(),
     ),
-
-    /* // Rutas comentadas hasta implementar las pantallas correspondientes
-    GoRoute(
-      path: AppRoutes.challenges,
-      builder: (context, state) => const ChallengesScreen(),
-    ),
-    
-    // Rutas de perfil y configuración
-    GoRoute(
-      path: AppRoutes.profile,
-      builder: (context, state) => const ProfileScreen(),
-    ),
-    
-    GoRoute(
-      path: AppRoutes.settings,
-      builder: (context, state) => const SettingsScreen(),
-    ),
-    */
   ],
 
   // Configuración de errores
@@ -209,11 +180,4 @@ final GoRouter appRouter = GoRouter(
       ),
     ),
   ),
-
-  // Redirecciones
-  redirect: (BuildContext context, GoRouterState state) {
-    // Aquí podríamos implementar redirecciones condicionales,
-    // por ejemplo, para verificar autenticación o estado de onboarding
-    return null; // Sin redirecciones por ahora
-  },
 );

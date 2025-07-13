@@ -74,10 +74,13 @@ class _ShellScaffoldState extends State<ShellScaffold> {
     else if (location == '/books' ||
         location == '/statistics' ||
         location == '/challenges' ||
-        location == '/profile' ||
-        location == '/reading_session_history') {
+        location == '/profile') {
       debugPrint('BackButtonInterceptor: En ruta principal, yendo a HOME');
       context.go('/home');
+      return true; // Interceptamos para ir a home
+    } else if (location == AppRoutes.readingSessionHistory) {
+      debugPrint('BackButtonInterceptor: En ruta principal, yendo a HOME');
+      context.go(AppRoutes.statistics);
       return true; // Interceptamos para ir a home
     }
 
