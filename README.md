@@ -8,9 +8,6 @@
   <b>Tu compañero digital para la lectura</b>
 </p>
 
-<p align="center">
-  <img src="screenshots/app_preview.jpeg" alt="Vista previa de la aplicación" width="800"/>
-</p>
 
 ## 📖 Descripción
 
