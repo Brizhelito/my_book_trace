@@ -120,15 +120,20 @@ class _HomeContentState extends State<HomeContent> {
                 return const Center(child: CircularProgressIndicator());
               }
               if (activeChallenges.isEmpty) {
-                return const Card(
+                return Card(
                   margin: EdgeInsets.symmetric(vertical: 8),
                   child: ListTile(
-                    leading: CircleAvatar(
+                    leading: const CircleAvatar(
                       backgroundColor: Colors.amber,
                       child: Icon(Icons.emoji_events, color: Colors.white),
                     ),
-                    title: Text('Sin desafíos activos'),
-                    subtitle: Text('Crea un desafío para motivarte a leer más'),
+                    title: const Text('Sin desafíos activos'),
+                    subtitle: const Text(
+                      'Crea un desafío para motivarte a leer más',
+                    ),
+                    onTap: () {
+                      context.push(AppRoutes.challenges);
+                    },
                   ),
                 );
               }

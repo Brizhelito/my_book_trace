@@ -40,7 +40,6 @@ dependencies:
 
   # Gestión de estado
   provider: ^6.1.2
-  flutter_riverpod: ^2.5.1
 
   # Base de datos
   sqflite: ^2.3.2

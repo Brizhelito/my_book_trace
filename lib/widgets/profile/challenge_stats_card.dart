@@ -1,4 +1,6 @@
+import 'package:MyBookTrace/constants/app_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:MyBookTrace/providers/challenge_provider.dart';
 import 'package:MyBookTrace/models/challenge.dart';
@@ -131,7 +133,7 @@ class _ChallengeStatsCardState extends State<ChallengeStatsCard> {
             ElevatedButton.icon(
               onPressed: () {
                 // Navegar a la pantalla de desafíos
-                Navigator.pushNamed(context, '/challenges');
+                context.push(AppRoutes.challenges);
               },
               icon: const Icon(Icons.add),
               label: const Text('Crear Desafío'),
