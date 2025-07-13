@@ -21,10 +21,10 @@ MyBookTrace es una aplicación móvil desarrollada con Flutter para rastrear y g
 <div align="center">
   <div style="display: flex; flex-wrap: wrap; justify-content: space-between;">
     <img src="screenshots/home_screen.jpeg" alt="Pantalla de Inicio" width="19%" style="margin: 0.5%;" />
-    <img src="screenshots/book_list.jpeg" alt="Lista de Libros" width="19%" style="margin: 0.5%;" />
-    <img src="screenshots/book_detail.jpeg" alt="Detalle de Libro" width="19%" style="margin: 0.5%;" />
-    <img src="screenshots/reading_session.jpeg" alt="Sesión de Lectura" width="19%" style="margin: 0.5%;" />
-    <img src="screenshots/statistics.jpeg" alt="Estadísticas" width="19%" style="margin: 0.5%;" />
+    <img src="screenshots/book_list.jpg" alt="Lista de Libros" width="19%" style="margin: 0.5%;" />
+    <img src="screenshots/book_detail.jpg" alt="Detalle de Libro" width="19%" style="margin: 0.5%;" />
+    <img src="screenshots/reading_session.jpg" alt="Sesión de Lectura" width="19%" style="margin: 0.5%;" />
+    <img src="screenshots/statistics.jpg" alt="Estadísticas" width="19%" style="margin: 0.5%;" />
   </div>
 </div>
 
