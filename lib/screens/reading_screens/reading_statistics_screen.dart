@@ -126,7 +126,9 @@ class _ReadingStatisticsScreenState extends State<ReadingStatisticsScreen>
               _buildStatRow(
                 title: 'Tiempo total de lectura',
                 value: sessionProvider.formatDuration(
-                  stats['totalDuration'] ?? 0,
+                  (stats['totalDuration'] is Duration)
+                    ? (stats['totalDuration'] as Duration).inSeconds
+                    : (stats['totalDuration'] ?? 0),
                 ),
                 icon: Icons.access_time,
               ),
@@ -173,7 +175,7 @@ class _ReadingStatisticsScreenState extends State<ReadingStatisticsScreen>
           ListTile(
             title: Text('${session.pagesRead} páginas leídas'),
             subtitle: Text(
-              'Duración: ${provider.formatDuration(session.duration)}',
+              'Duración: ${provider.formatDuration(session.duration.inSeconds)}',
             ),
             trailing: Text(
               '${session.date.day}/${session.date.month}/${session.date.year}',

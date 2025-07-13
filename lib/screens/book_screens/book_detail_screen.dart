@@ -442,7 +442,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                     Text(
-                      _formatDuration(Duration(seconds: session.duration)),
+                      _formatDuration(session.duration),
                       style: Theme.of(context).textTheme.titleSmall,
                     ),
                   ],
@@ -587,7 +587,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     final dateFormat = DateFormat('dd/MM/yyyy HH:mm');
     final formattedDate = dateFormat.format(session.date);
     final pagesRead = session.endPage - session.startPage;
-    final readingTime = _formatDuration(Duration(seconds: session.duration));
+    final readingTime = _formatDuration(session.duration);
 
     return Card(
       margin: const EdgeInsets.only(bottom: 12.0),
@@ -640,11 +640,11 @@ class _BookDetailScreenState extends State<BookDetailScreen>
 
   // Formatear el tiempo total de lectura
   String _formatTotalReadingTime() {
-    int totalSeconds = 0;
+    Duration totalDuration = Duration.zero;
     for (final session in _bookSessions) {
-      totalSeconds += session.duration;
+      totalDuration += session.duration;
     }
-    return _formatDuration(Duration(seconds: totalSeconds));
+    return _formatDuration(totalDuration);
   }
 
   // Formatear una duración a texto legible
@@ -659,19 +659,45 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     }
   }
 
+  // Calcular páginas por hora
+  String _calculatePagesPerHour() {
+    if (_bookSessions.isEmpty) {
+      return '0 págs/hora';
+    }
+
+    int totalPages = 0;
+    Duration totalDuration = Duration.zero;
+
+    for (final session in _bookSessions) {
+      totalPages += (session.endPage - session.startPage);
+      totalDuration += session.duration;
+    }
+
+    // Evitar división por cero
+    if (totalDuration.inSeconds == 0) {
+      return '0 págs/hora';
+    }
+
+    // Calcular páginas por hora: (páginas * 3600) / segundos totales
+    final pagesPerHour = (totalPages * 3600) / totalDuration.inSeconds;
+
+    return '${pagesPerHour.toStringAsFixed(1)} págs/hora';
+  }
+
   // Calcular el tiempo promedio por sesión
   String _calculateAverageSessionTime() {
     if (_bookSessions.isEmpty) {
       return '0 min';
     }
 
-    int totalSeconds = 0;
+    Duration totalDuration = Duration.zero;
     for (final session in _bookSessions) {
-      totalSeconds += session.duration;
+      totalDuration += session.duration;
     }
 
-    final averageSeconds = totalSeconds ~/ _bookSessions.length;
-    return _formatDuration(Duration(seconds: averageSeconds));
+    final averageMilliseconds =
+        totalDuration.inMilliseconds ~/ _bookSessions.length;
+    return _formatDuration(Duration(milliseconds: averageMilliseconds));
   }
 
   // Obtener la fecha de la primera sesión
@@ -708,7 +734,7 @@ class _BookDetailScreenState extends State<BookDetailScreen>
     int totalSeconds = 0;
 
     for (final session in _bookSessions) {
-      totalSeconds += session.duration;
+      totalSeconds += session.duration.inSeconds;
     }
 
     if (totalSeconds == 0) {

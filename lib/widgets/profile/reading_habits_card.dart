@@ -95,8 +95,8 @@ class ReadingHabitsCard extends StatelessWidget {
     for (final session in sessions) {
       // Asumimos que date no es nulo por el diseño del modelo
       final weekday = session.date.weekday - 1; // 0 = lunes, 6 = domingo
-      // Convertir segundos a minutos como double
-      weekdayMinutes[weekday] += (session.duration / 60.0); // Convertir segundos a minutos
+      // Convertir la duración (Duration) a minutos como double
+      weekdayMinutes[weekday] += (session.duration.inSeconds / 60.0); // Convertir a minutos
     }
     
     // Nombres de los días de la semana
@@ -222,8 +222,8 @@ class ReadingHabitsCard extends StatelessWidget {
       // Asumimos que startPage y endPage no son nulos por el diseño del modelo
       totalPages += (session.endPage - session.startPage);
       
-      // Sumar tiempo de lectura - convertir segundos (int) a Duration
-      totalTime += Duration(seconds: session.duration);
+      // Sumar tiempo de lectura - la duración ya es un objeto Duration
+      totalTime += session.duration;
       
       // Determinar primera y última sesión
       // Asumimos que date no es nulo por el diseño del modelo

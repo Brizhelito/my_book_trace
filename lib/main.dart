@@ -32,9 +32,25 @@ class MyBookTrace extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => BookProvider()),
-        ChangeNotifierProvider(create: (_) => ReadingSessionProvider()..initialize()),
+        // Inicializar los providers principales
+        ChangeNotifierProvider(create: (_) => BookProvider()..initialize()),
         ChangeNotifierProvider(create: (_) => ChallengeProvider()..init()),
+        // Inicializar el ReadingSessionProvider y conectarlo con los demás
+        ChangeNotifierProxyProvider2<BookProvider, ChallengeProvider, ReadingSessionProvider>(
+          create: (_) => ReadingSessionProvider(),
+          update: (_, bookProvider, challengeProvider, sessionProvider) {
+            // Inicializar si es la primera vez
+            sessionProvider ??= ReadingSessionProvider();
+            // Establecer las referencias a los otros providers
+            sessionProvider.setBookProvider(bookProvider);
+            sessionProvider.setChallengeProvider(challengeProvider);
+            // Inicializar si aún no se ha hecho
+            if (!sessionProvider.isInitialized) {
+              sessionProvider.initialize();
+            }
+            return sessionProvider;
+          },
+        ),
       ],
       child: MaterialApp.router(
         title: 'MyBookTrace',

@@ -216,7 +216,7 @@ class _ReadingSessionHistoryScreenState
 
                 const SizedBox(height: 8),
                 Text(
-                  'Duración: ${_formatDuration(Duration(seconds: session.duration))}',
+                  'Duración: ${_formatDuration(session.duration)}',
                 ),
 
                 const SizedBox(height: 16),
@@ -486,8 +486,8 @@ class _ReadingSessionHistoryScreenState
   Widget _buildSessionItem(ReadingSession session) {
     final pagesRead = session.endPage - session.startPage;
     final bookTitle = _getBookTitle(session.bookId);
-    final readingSpeed = session.duration > 0
-        ? (pagesRead * 3600) / session.duration
+    final readingSpeed = session.duration.inSeconds > 0
+        ? (pagesRead * 3600) / session.duration.inSeconds
         : 0;
 
     return Card(
@@ -524,7 +524,7 @@ class _ReadingSessionHistoryScreenState
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        'Tiempo: ${_formatDuration(Duration(seconds: session.duration))}',
+                        'Tiempo: ${_formatDuration(session.duration)}',
                       ),
                     ],
                   ),

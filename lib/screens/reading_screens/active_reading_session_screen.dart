@@ -504,7 +504,7 @@ class _ActiveReadingSessionScreenState
         date: DateTime.now(),
         startPage: _startPage,
         endPage: endPage,
-        duration: _elapsedTime.inSeconds,
+        duration: _elapsedTime,
         notes: sanitizedNotes,
       );
 

@@ -93,8 +93,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // Solo procesamos si el género existe y no está vacío
       if (book.genre != null && book.genre!.isNotEmpty) {
         final genre = book.genre!;
-        // Convertir segundos a Duration
-        final sessionDuration = Duration(seconds: session.duration);
+        // La duración ya es un objeto Duration
+        final sessionDuration = session.duration;
         
         // Asegurarse de que el valor del mapa sea de tipo Duration
         final currentDuration = _genreReadingTime[genre] ?? Duration.zero;
@@ -108,8 +108,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     for (final session in _sessions) {
       // Asumimos que bookId no es nulo en el modelo
       final bookId = session.bookId;
-      // Convertir segundos a Duration
-      final sessionDuration = Duration(seconds: session.duration);
+      // La duración ya es un objeto Duration
+      final sessionDuration = session.duration;
       
       // Asegurarse de que el valor del mapa sea de tipo Duration
       final currentDuration = bookReadingTime[bookId] ?? Duration.zero;
@@ -192,9 +192,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final totalReadingTime = _sessions.fold<Duration>(
       Duration.zero,
       (total, session) {
-        // Convertir segundos a Duration
-        final sessionDuration = Duration(seconds: session.duration);
-        return total + sessionDuration;
+        // La duración ya es un objeto Duration
+        return total + session.duration;
       },
     );
     

@@ -50,8 +50,6 @@ class GenreStatsCard extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 16),
-            _buildGenreLegend(),
           ],
         ),
       ),
@@ -316,45 +314,5 @@ class GenreStatsCard extends StatelessWidget {
     );
   }
 
-  /// Construye la leyenda de géneros
-  Widget _buildGenreLegend() {
-    // Combinar y ordenar géneros por tiempo y cantidad
-    final allGenres = <String>{};
-    allGenres.addAll(genreCount.keys);
-    allGenres.addAll(genreReadingTime.keys);
-
-    final sortedGenres = allGenres.toList()
-      ..sort((a, b) {
-        final countA = genreCount[a] ?? 0;
-        final countB = genreCount[b] ?? 0;
-        if (countA != countB) {
-          return countB.compareTo(countA);
-        }
-        final timeA = genreReadingTime[a]?.inMinutes ?? 0;
-        final timeB = genreReadingTime[b]?.inMinutes ?? 0;
-        return timeB.compareTo(timeA);
-      });
-
-    // Tomar los 6 géneros más relevantes
-    final topGenres = sortedGenres.take(6).toList();
-
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: topGenres.map((genre) {
-        final count = genreCount[genre] ?? 0;
-        final time = genreReadingTime[genre] ?? Duration.zero;
-        final hours = time.inHours;
-        final minutes = time.inMinutes.remainder(60);
-
-        return Chip(
-          label: Text(
-            '$genre ($count libros, ${hours > 0 ? '${hours}h ' : ''}${minutes}m)',
-            style: const TextStyle(fontSize: 12),
-          ),
-          backgroundColor: Colors.grey[200],
-        );
-      }).toList(),
-    );
-  }
+  // Se eliminó el método _buildGenreLegend() que ya no se utiliza
 }

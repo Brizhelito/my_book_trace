@@ -3,6 +3,8 @@ import 'package:go_router/go_router.dart';
 import 'package:my_book_trace/constants/app_constants.dart';
 import 'package:provider/provider.dart';
 import 'package:my_book_trace/providers/book_provider.dart';
+import 'package:my_book_trace/providers/challenge_provider.dart';
+import 'package:my_book_trace/widgets/challenges/challenge_card.dart';
 
 /// Widget que muestra el contenido principal de la pantalla de inicio
 /// Separado para poder integrarlo directamente en el router
@@ -110,18 +112,33 @@ class _HomeContentState extends State<HomeContent> {
           ),
           const SizedBox(height: 8),
 
-          // Placeholder para desafíos
-          Card(
-            margin: const EdgeInsets.symmetric(vertical: 8),
-            child: ListTile(
-              leading: const CircleAvatar(
-                backgroundColor: Colors.amber,
-                child: Icon(Icons.emoji_events, color: Colors.white),
-              ),
-              title: const Text('Lectura mensual'),
-              subtitle: const Text('5 de 10 libros completados'),
-              trailing: const Text('50%'),
-            ),
+          // Desafíos activos reales
+          Consumer<ChallengeProvider>(
+            builder: (context, challengeProvider, _) {
+              final activeChallenges = challengeProvider.activeChallenges;
+              if (challengeProvider.isLoading) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (activeChallenges.isEmpty) {
+                return const Card(
+                  margin: EdgeInsets.symmetric(vertical: 8),
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      backgroundColor: Colors.amber,
+                      child: Icon(Icons.emoji_events, color: Colors.white),
+                    ),
+                    title: Text('Sin desafíos activos'),
+                    subtitle: Text('Crea un desafío para motivarte a leer más'),
+                  ),
+                );
+              }
+              return Column(
+                children: activeChallenges.map((challenge) => Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 4.0),
+                  child: ChallengeCard(challenge: challenge),
+                )).toList(),
+              );
+            },
           ),
         ],
       ),
