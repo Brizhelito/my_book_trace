@@ -121,13 +121,19 @@ final GoRouter appRouter = GoRouter(
           path: AppRoutes.statistics,
           builder: (context, state) => const ReadingStatisticsScreen(),
         ),
-
+        // Ruta para el historial de sesiones de lectura
+        GoRoute(
+          path: AppRoutes.readingSessionHistory,
+          builder: (context, state) {
+            return const ReadingSessionHistoryScreen();
+          },
+        ),
         // Ruta de desafíos - Challenges branch
         GoRoute(
           path: AppRoutes.challenges,
           builder: (context, state) => const ChallengesScreen(),
         ),
-
+        
         // Ruta de perfil - Profile branch
         GoRoute(
           path: AppRoutes.profile,
@@ -140,14 +146,6 @@ final GoRouter appRouter = GoRouter(
       builder: (context, state) {
         final bookId = state.pathParameters['id']!;
         return ActiveReadingSessionScreen(bookId: bookId);
-      },
-    ),
-
-    // Ruta para el historial de sesiones de lectura
-    GoRoute(
-      path: AppRoutes.readingSessionHistory,
-      builder: (context, state) {
-        return const ReadingSessionHistoryScreen();
       },
     ),
 
